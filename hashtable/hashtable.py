@@ -17,12 +17,25 @@ class HashTable:
     Implement this.
     """
 
+    def __init__(self, capacity):
+        self.capacity = capacity
+        self.storage = [None] * capacity
+        # self.head = None
+
     def fnv1(self, key):
         """
         FNV-1 64-bit hash function
 
         Implement this, and/or DJB2.
         """
+        str_bytes = key.encode()
+
+        FNV_prime = 2**40 + 2**8 + 0xb3
+        hash = 14695981039346656037
+        for i in key:
+            hash = hash * FNV_prime
+            hash = hash ^ str_bytes(i)
+        return hash & 0xffffffffffffffff
 
     def djb2(self, key):
         """
@@ -30,13 +43,17 @@ class HashTable:
 
         Implement this, and/or FNV-1.
         """
+        hash = 5381
+        for x in key:
+            hash = hash * 33 + ord(x)
+        return hash
 
     def hash_index(self, key):
         """
         Take an arbitrary key and return a valid integer index
         between within the storage capacity of the hash table.
         """
-        #return self.fnv1(key) % self.capacity
+        # print(self.fnv1(key) % self.capacity)
         return self.djb2(key) % self.capacity
 
     def put(self, key, value):
@@ -47,6 +64,12 @@ class HashTable:
 
         Implement this.
         """
+        newEntry = HashTableEntry(key, value)
+        newIndex = self.hash_index(key)
+        self.storage[newIndex] = newEntry
+        # check if head is None, if it is, make head the newEntry
+        # if self.head == = None:
+        #     head == = newEntry
 
     def delete(self, key):
         """
@@ -73,6 +96,7 @@ class HashTable:
 
         Implement this.
         """
+
 
 if __name__ == "__main__":
     ht = HashTable(2)
