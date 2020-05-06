@@ -28,13 +28,13 @@ class HashTable:
 
         Implement this, and/or DJB2.
         """
-        str_bytes = key.encode()
+        # str_bytes = key.encode()
 
-        FNV_prime = 2**40 + 2**8 + 0xb3
+        FNV_prime = 2**40 + 2**8 + 0xb3  # 64 bit
         hash = 14695981039346656037
         for i in key:
             hash = hash * FNV_prime
-            hash = hash ^ str_bytes(i)
+            hash = hash ^ ord(i)
         return hash & 0xffffffffffffffff
 
     def djb2(self, key):
@@ -87,11 +87,19 @@ class HashTable:
         # get the index storage
         node = self.storage[newIndex]
         # store the value in newIndex
-        while node.next is not None:
+        prev = None
+        while node is not None:
+            # print(node.key, node.value)
+            if node.key == key:
+                node.value = newEntry.value
+                return
             # go to next node
-            node = node.next
+            # if node is None:
+            #     prev = node
+            prev = node
+            node = node.next  # none
 
-        node.next = newEntry
+        prev.next = newEntry
 
     def delete(self, key):
         """
@@ -116,22 +124,23 @@ class HashTable:
         index = self.hash_index(key)
         node = self.storage[index]
 
-        if node.key == key:
-            # node = node.next
-            node.next = None
-            return node
+        if node is None:
+            return 'Key not found'
 
         prev = None
 
         while node is not None:
+            # print(node.key, node.value)
             if node.key == key:
-                prev.next = node
-                node.next = None
-                return node
+                if prev is None:
+                    self.storage[index] = node.next
+                    return self.storage[index]
+                else:
+                    node.next = None
+                    return node
 
-            prev = node
+                prev = node
             node = node.next
-
         return None
 
     def get(self, key):
@@ -163,6 +172,7 @@ class HashTable:
 
         Implement this.
         """
+        # double = self.storage * 2
 
 
 if __name__ == "__main__":
