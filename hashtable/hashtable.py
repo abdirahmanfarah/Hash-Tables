@@ -20,7 +20,8 @@ class HashTable:
     def __init__(self, capacity):
         self.capacity = capacity
         self.storage = [None] * capacity
-        # self.head = None
+        # keeps track of the elements in storage
+        self.population = 0
 
     def fnv1(self, key):
         """
@@ -75,6 +76,16 @@ class HashTable:
         get("baz")
         delete("bar")
         """
+
+        # rehash_num = divided elem population by capacity number
+
+        # Check if rehash_num is greater than 0.7
+        rehash_list = self.population / self.capacity
+        load = 0.7
+
+        if rehash_list > load:
+            self.resize()
+
         # Add new entry
         newEntry = HashTableEntry(key, value)
         # hash the key and find it's index
@@ -94,8 +105,6 @@ class HashTable:
                 node.value = newEntry.value
                 return
             # go to next node
-            # if node is None:
-            #     prev = node
             prev = node
             node = node.next  # none
 
@@ -165,14 +174,27 @@ class HashTable:
         # return when the search reaches the end of the single node
         return None
 
-    def resize(self):
+    def resize(self, new_capacity=None):
         """
         Doubles the capacity of the hash table and
         rehash all key/value pairs.
 
         Implement this.
         """
-        # double = self.storage * 2
+        curr_storage = self.storage
+        self.capacity = new_capacity or self.capacity * 2
+        new_array = [None] * self.capacity
+        self.storage = new_array
+        self.population = 0
+
+        for i in curr_storage:
+            if i is not None:
+                node = i
+                while node is not None:
+                    self.put(node.key, node.value)
+                    node = node.next
+
+        # if it isn't, do nothing
 
 
 if __name__ == "__main__":
