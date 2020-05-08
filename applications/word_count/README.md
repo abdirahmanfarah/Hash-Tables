@@ -29,3 +29,8 @@ Ignore each of the following characters:
 ```
 
 If the input contains no ignored characters, return an empty dictionary.
+
+<!-- Turn string into dictionary -->
+<!-- count how many words show up in the string -->
+<!-- output is word as key, and value as the count -->
+<!-- key is lowercase -->

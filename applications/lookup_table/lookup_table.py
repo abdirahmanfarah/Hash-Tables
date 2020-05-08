@@ -1,13 +1,19 @@
 import math
 import random
 
+hashtable = {}
+
+
 def slowfun(x, y):
-    # TODO: Modify to produce the same results, but much faster
+    element = (x, y)
+    if element in hashtable:
+        return hashtable[(x, y)]
     v = math.pow(x, y)
     v = math.factorial(v)
     v //= (x + y)
     v %= 982451653
 
+    hashtable[(x, y)] = v
     return v
 
 
